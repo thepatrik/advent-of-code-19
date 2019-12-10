@@ -24,5 +24,9 @@
 6:
 	cargo test --manifest-path=day6/Cargo.toml
 
+.PHONY: 7
+7:
+	cargo test --manifest-path=day7/Cargo.toml
+
 .PHONY: all
-all: 1 2 3 4 5 6
+all: 1 2 3 4 5 6 7
