@@ -26,7 +26,11 @@ impl Intcode {
     }
 
     pub fn read(&self, loc: i64) -> i64 {
-        *self.mem.get(&(loc as u64)).unwrap()
+        match self.mem.get(&(loc as u64)) {
+            Some(v) => *v,
+            None => 0,
+        }
+        // *self.mem.get(&(loc as u64)).unwrap()
     }
 
     pub fn write(&mut self, loc: i64, val: i64) {
