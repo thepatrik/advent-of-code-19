@@ -40,5 +40,9 @@
 10:
 	cargo test --manifest-path=day10/Cargo.toml
 
+.PHONY: 11
+11:
+	cargo test --manifest-path=day11/Cargo.toml
+
 .PHONY: all
-all: 1 2 3 4 5 6 7 8 9 10
+all: 1 2 3 4 5 6 7 8 9 10 11
