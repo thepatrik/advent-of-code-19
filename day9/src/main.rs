@@ -25,7 +25,7 @@ fn process(input: &str, i: i64) -> i64 {
 
     loop {
         let out = app.run();
-        if app.halted {
+        if app.state == intcode::State::Halted {
             return out;
         }
     }

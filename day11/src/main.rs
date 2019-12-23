@@ -58,7 +58,7 @@ fn process(input: String, color: Color) -> HashMap<(i32, i32), char> {
     loop {
         // Read color code
         let color_code = app.run();
-        if app.halted {
+        if app.state == intcode::State::Halted {
             break;
         }
 
@@ -68,7 +68,7 @@ fn process(input: String, color: Color) -> HashMap<(i32, i32), char> {
 
         // Read direction code
         let dir_code = app.run();
-        if app.halted {
+        if app.state == intcode::State::Halted {
             break;
         }
 

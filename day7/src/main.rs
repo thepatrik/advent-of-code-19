@@ -109,7 +109,7 @@ pub fn amp_loop(input: &str, seq: Vec<i64>) -> i64 {
     app_e.init(input, seq[4]);
 
     let mut a_feedback = 0;
-    while !app_e.halted {
+    while app_e.state != intcode::State::Halted {
         let mut out = process(&mut app_a, a_feedback);
         out = process(&mut app_b, out);
         out = process(&mut app_c, out);

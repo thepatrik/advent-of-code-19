@@ -1,13 +1,23 @@
 use std::collections::HashMap;
 use std::collections::VecDeque;
 
+#[derive(Debug, PartialEq)]
+pub enum State {
+    Halted,
+    Init,
+    Loaded,
+    Paused,
+	Running,
+	Waiting,
+}
+
 #[derive(Debug)]
 pub struct Intcode {
     mem: HashMap<u64, i64>,
     pointer: i64,
     pub input: VecDeque<i64>,
     pub output: i64,
-    pub halted: bool,
+    pub state: State,
     pub rel_base: i64,
 }
 
@@ -30,7 +40,6 @@ impl Intcode {
             Some(v) => *v,
             None => 0,
         }
-        // *self.mem.get(&(loc as u64)).unwrap()
     }
 
     pub fn write(&mut self, loc: i64, val: i64) {
@@ -58,7 +67,8 @@ impl Intcode {
     }
 
     pub fn run(&mut self) -> i64 {
-        loop {
+        self.state = State::Running;
+        while self.state == State::Running { 
             let instr = self.read(self.pointer);
             let opcode = instr - instr / 100 * 100;
             let m_1 = (instr - instr / 1000 * 1000) / 100 % 3;
@@ -83,16 +93,19 @@ impl Intcode {
                     }
 
                     match self.input.pop_back() {
-                        Some(v) => self.write(d, v),
-                        None => panic!("Attempted to read from empty input buffer!"),
+                        Some(v) => { 
+							self.write(d, v);
+							self.pointer += 2;
+						},
+                        None => self.state = State::Waiting, 
                     }
-                    self.pointer += 2;
                 }
                 4 => {
                     let a = self.read(self.pointer + 1);
                     self.output = self.val(a, m_1);
                     self.pointer += 2;
-                    break;
+                    self.state = State::Paused;
+                    // return self.output;
                 }
                 5 => {
                     let (a, j) = self.get_2_params(self.pointer);
@@ -134,7 +147,7 @@ impl Intcode {
                     self.pointer += 2;
                 }
                 99 => {
-                    self.halted = true;
+                    self.state = State::Halted;
                     break;
                 }
                 _ => panic!("Unexpected opcode {}", opcode),
@@ -149,7 +162,7 @@ impl Intcode {
             mem: HashMap::new(),
             input: VecDeque::new(),
             output: 0,
-            halted: false,
+            state: State::Init,
             rel_base: 0,
         }
     }
@@ -164,6 +177,6 @@ impl Intcode {
         }
 
         self.pointer = 0;
-        self.halted = false;
+        self.state = State::Loaded;
     }
 }
