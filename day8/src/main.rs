@@ -59,8 +59,8 @@ fn part_two(w: usize, h: usize) -> String {
 		}	
 	}
 
-	for n in 1..7 {
-		canvas.insert(n * 25 + n - 1, '\n');
+	for n in 1..h+1 {
+		canvas.insert(n * w + n - 1, '\n');
 	}
 	canvas.iter().collect()
 }
